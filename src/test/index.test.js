@@ -46,7 +46,8 @@ test('Time 的实例拥有 then 属性, 并且具有一个 then 方法', () => {
 
 test('Time 构造函数的参数 resolver 被执行, 且只执行一次', () => {
 	const resolver = jest.fn()
-	new Time(resolver)
+	const time = new Time(resolver)
+	time.then(() => done())
 	expect(resolver).toHaveBeenCalledTimes(1)
 })
 
@@ -56,17 +57,18 @@ test('resolver 需要接受resolve 和 reject 两个参数, 这个两个参数�
 		expect(reject).toBeInstanceOf(Function)
 	}
 
-	new Time(excutor)
+  new Time(excutor)
+
 })
 
-test('then中的onFulfiled会在resolve 被调用的时候执行', (done) => {
+test('then中的onFulfiled会在resolve 被调用的时候执行', done => {
 	const time = new Time((resolve, reject) => {
 		resolve()
 	})
 
-	const onFulfiled = data => {
-		done()
-	}
+	const onFulfiled = jest.fn()
 
 	time.then(onFulfiled)
+
+	expect(onFulfiled).toHaveBeenCalledTimes(1)
 })
